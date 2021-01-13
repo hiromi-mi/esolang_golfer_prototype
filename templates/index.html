@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="content">
+   <header>
+      <h1>{% block title %}Dashboard{% endblock %}</h1>
+   </header>
+
+   <ul>
+   {% for best in field_bests %}
+   <li>{{best }}</li>
+   {% endfor %}
+   </ul>
+</section>
+{% endblock %}

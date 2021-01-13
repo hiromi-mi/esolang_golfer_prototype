@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="content">
+   <header>
+      <h1>{% block title %}Submissions{% endblock %}</h1>
+   </header>
+
+   <table class="submissions">
+      <tr><th> ID </th> <th> Field </th> <th> Length </th> <th> User </th> <th> Status </th> <th> Time </th> </tr>
+   {% for submission in submissions %}
+   <tr><td> {{ submission['id'] }} </td>
+      <td> {{ submission['fieldname'] }} </td>
+      <td> {{ submission['length'] }} </td>
+      <td> {{ submission['username'] }}</td>
+      <td> {{ submission['status'] }}</td>
+      <td> {{ submission['created'] }}</td>
+   </tr>
+   {% endfor %}
+   </table>
+</section>
+{% endblock %}
