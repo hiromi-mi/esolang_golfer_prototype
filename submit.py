@@ -75,7 +75,7 @@ def submit():
 
                 container.wait(timeout=7)
                 stdout = container.logs(stdout=True, stderr=False).decode()
-                stderr = container.logs(stdout=True, stderr=False).decode()
+                stderr = container.logs(stdout=False, stderr=True).decode()
             
             status = "AC" if stdout == "Hello, World!" else "WA"
 
@@ -100,3 +100,18 @@ def get_submissions():
             ' ORDER BY created DESC'
             ).fetchall()
     return render_template('submission/index.html', submissions=submissions)
+
+@bp.route('/<int:submitid>')
+@login_required
+def get_submission(submitid):
+    db = get_db()
+    submission = db.execute(
+            'SELECT fieldname, length, username, status, created, source, stdout, stderr'
+            ' FROM submission s JOIN user u ON s.user_id = u.id JOIN field f ON f.id = s.field_id'
+            ' WHERE s.id = ?'
+            ,(submitid,)
+            ).fetchone()
+    if submission is None:
+        abort(404, f"Submission {submitid} Does not exist.")
+
+    return render_template('submission/submission.html', currentid=submitid, submission=submission)

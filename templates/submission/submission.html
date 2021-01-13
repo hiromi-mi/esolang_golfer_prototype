@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="content">
+   <header>
+      <h1>{% block title %}Submission #{{ currentid }} by {{ submission['username']}}{% endblock %}</h1>
+   </header>
+
+   <ul>
+      <li>Field: {{ submission['fieldname'] }}</li>
+      <li>Length: {{ submission['length'] }} Bytes</li>
+      <li>User: {{ submission['username'] }}</li>
+      <li>Status: {{ submission['status'] }}</li>
+      <li>Created: {{ submission['created'] }}</li>
+   </ul>
+   <p>Source</p>
+   <textarea readonly name="source">{{submission['source']}}</textarea>
+   <p>Standard Output</p>
+   <textarea readonly name="stdout">{{submission['stdout']}}</textarea>
+   <p>Standard Error</p>
+   <textarea readonly name="stderr">{{submission['stderr']}}</textarea>
+</section>
+{% endblock %}
