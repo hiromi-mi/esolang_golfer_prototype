@@ -1,2 +1,3 @@
 *.db
+esolang_golfer_prototype.egg-info
 __pycache__/

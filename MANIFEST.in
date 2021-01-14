@@ -1,0 +1,4 @@
+include esolang_golfer_prototype/schema.sql
+graft esolang_golfer_prototype/static
+graft esolang_golfer_prototype/templates
+global-exclude *.pyc
