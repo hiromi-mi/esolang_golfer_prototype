@@ -1,5 +1,6 @@
 h1 { color: #377ba8; }
 nav { background: lightgray; display: flex; align-item: center; }
+//nav a { text-decoration: none; } /* to remove links */
 nav h1 { flex: auto; margin: 0; }
 nav ul { display: flex; list-style: none; margin: 0; padding: 0; }
 nav ul li { display: block; padding: 0.5rem; }
@@ -22,4 +23,8 @@ a:visited {
 }
 @media screen and (max-width: 900px) {
    .nav-large {display: none;}
+}
+.submissionlog {
+   display: flex;
+   flex-direction: column;
 }
