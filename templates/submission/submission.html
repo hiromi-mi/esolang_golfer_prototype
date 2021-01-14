@@ -14,10 +14,10 @@
       <li>Created: {{ submission['created'] }}</li>
    </ul>
    <p>Source</p>
-   <textarea readonly name="source">{{submission['source']}}</textarea>
+   <textarea rows="10" readonly name="source">{{submission['source']}}</textarea>
    <p>Standard Output</p>
-   <textarea readonly name="stdout">{{submission['stdout']}}</textarea>
+   <textarea rows="10" readonly name="stdout">{{submission['stdout']}}</textarea>
    <p>Standard Error</p>
-   <textarea readonly name="stderr">{{submission['stderr']}}</textarea>
+   <textarea rows="10" readonly name="stderr">{{submission['stderr']}}</textarea>
 </section>
 {% endblock %}

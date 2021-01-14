@@ -20,7 +20,7 @@ bp = Blueprint('submit', __name__, url_prefix='/submission')
 def submit():
     if request.method == 'POST':
         error = None
-        fieldname = request.form['field']
+        field_id = request.form['field_id']
         source = request.form['source']
         bsource = source.encode()
         length = len(bsource)
@@ -40,8 +40,8 @@ def submit():
             langs = db.execute(
                     'SELECT id, fieldlang'
                     ' FROM field'
-                    ' WHERE fieldname = ?',
-                    (fieldname,)).fetchall()
+                    ' WHERE id = ?',
+                    (field_id,)).fetchall()
 
             if len(langs) == 0:
                 error = "Your language is not expected"
@@ -88,7 +88,13 @@ def submit():
             db.commit()
             return redirect(url_for('index'))
 
-    return render_template('submission/submit.html')
+    db = get_db()
+    fields = db.execute(
+            'SELECT id, fieldname'
+            ' FROM field'
+            ).fetchall()
+
+    return render_template('submission/submit.html', fields=fields)
 
 @bp.route('/')
 @login_required

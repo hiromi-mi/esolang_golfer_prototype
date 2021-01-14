@@ -7,10 +7,14 @@
    </header>
 
    <form method="POST">
-      <label for="field">Field</label>
-      <input name="field" id="field" value="{{ request.form['field']}}" required>
+      <label for="field_id">Field</label>
+      <select name="field_id" id="field_id">
+         {% for field in fields %}
+         <option value="{{field['id']}}">{{ field['fieldname'] }}</option>
+         {%endfor%}
+      </select>
       <label for="source">Source Code</label>
-      <textarea name="source" id="source" required>{{ request.form['source'] }}</textarea>
+      <textarea rows="10" name="source" id="source" required>{{ request.form['source'] }}</textarea>
       <input type="submit" value="Submit!">
    </form>
    <p>Your submission will be licensed under CC0-1.0.</p>
