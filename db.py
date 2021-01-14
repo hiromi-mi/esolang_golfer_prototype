@@ -39,13 +39,12 @@ def init_db():
 @click.argument('lang', type=str, required=True)
 @with_appcontext
 def add_lang_command(name, lang):
-    #db = get_db()
-    #db.execute('INSERT INTO field'
-    #        '(fieldname, fieldlang) VALUES (?, ?)',
-    #        ("Functional()", "functional"))
-    #db.commit()
-    print(name, lang)
-    click.echo('Added.')
+    db = get_db()
+    db.execute('INSERT INTO field'
+            '(fieldname, fieldlang) VALUES (?, ?)',
+            (name, lang))
+    db.commit()
+    click.echo(f'Added {name} {lang}.')
 
 # click: CLI instance
 @click.command('init-db')
