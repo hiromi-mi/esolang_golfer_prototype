@@ -59,7 +59,7 @@ def submit():
                 # usually mkstemp's file should be removed manuall,
                 # but in this case 
                 # it will be removed authomatically by TemporaryDirectory()
-                (fd, fpath) = tempfile.mkstemp(dir=tmpdir)
+                (fd, fpath) = tempfile.mkstemp(suffix=".bash", dir=tmpdir)
                 with open(fd, "wb") as fp:
                     fp.write(bsource)
                 fname = os.path.split(fpath)[-1]
@@ -77,11 +77,14 @@ def submit():
                         f"esolang/{lang['fieldlang']}",
                         ("sh","-c", f"{lang['fieldlang']} /code/{fname} < /code/{inputname}"),
                         detach=True,
-                        volumes=volumes
+                        volumes=volumes,
+                        mem_limit="128m",
+                        network_mode="none"
                         )
 
                 #container.wait(timeout=7)
                 time.sleep(7)
+                container.reload()
                 if container.status != "exited":
                     container.kill()
                 stdout = container.logs(stdout=True, stderr=False).decode()
