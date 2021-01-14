@@ -2,10 +2,8 @@
 <title>{% block title %}{% endblock %} - Esolang Golfer</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <nav>
-   <h1>Esolang Golfer - Stay Home With Esolang</h1>
-   <ul>
-      <li><a href="{{ url_for('dashboard.dashboard')}}">Dashboard</a></li>
-      {% if g.user %}
+   <h1><a href="{{ url_for('dashboard.dashboard')}}">Esolang Golfer - Stay Home With Esolang</a></h1>
+   <ul> {% if g.user %}
       <li><a href="{{ url_for('submit.submit')}}">Submit</a></li>
       <li><a href="/submission/">Submissions</a></li>
       <li><span>{{ g.user['username'] }}</span>
@@ -13,8 +11,7 @@
       {% else %}
       <li><a href="{{ url_for('auth.register') }}">Register</a>
       <li><a href="{{ url_for('auth.login') }}">Log In</a>
-      {% endif %}
-   </ul>
+      {% endif %} </ul>
 </nav>
 
 <section class="notifications">

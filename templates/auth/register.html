@@ -9,8 +9,10 @@
    <form method="post">
       <label for="username">Username</label>
       <input name="username" id="username" required>
-      <label for="password">Password</label>
-      <input type="password" name="password" id="password" required>
+      <label for="password">Password (at least 8 characters)</label>
+      <input type="password" autocomplete="new-password" minlength="8" name="password" id="password" required>
+      <label for="check">スパム対策としてお手数ですが Befunge-93 「{{befunge}}」の実行結果を入力してください:</label>
+      <input name="check" id="check" required>
       <input type="submit" value="Register">
    </form>
 </section>

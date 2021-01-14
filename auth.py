@@ -7,8 +7,9 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from esolang_golfer_prototype.db import get_db
 
-bp = Blueprint('auth', __name__, url_prefix='/auth')
+import re
 
+bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 # wrapper which require authentification
 def login_required(view):
@@ -65,17 +66,27 @@ def login():
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
+    befunge = '"!gnalose">:#,_@'
+    befunge2 = "esolang!"
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        check = request.form['check']
         db = get_db()
         error = None
-
+        matchuser = re.compile("(\\w|-){3,24}").match(username)
         if not username:
             error = 'Username is required.'
         elif not password:
             error = 'Password is required.'
             # statistically
+        elif matchuser is None or matchuser.string != username:
+            error = 'Username validation was failed.'
+        elif len(password) < 8:
+            error = 'Password is too short.'
+        elif befunge2 != check:
+            error = 'Please confirm your form.'
         elif db.execute(
                 'SELECT id FROM user WHERE username = ?', (username, )
                 ).fetchone() is not None:
@@ -88,7 +99,6 @@ def register():
             db.commit()
             return redirect(url_for('auth.login'))
 
-        app.logger.error("Error: %s", error)
         flash(error)
 
-    return render_template('auth/register.html')
+    return render_template('auth/register.html', befunge=befunge)
