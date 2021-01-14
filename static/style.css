@@ -18,9 +18,10 @@ form label { font-weight: bold; }
 .user-esolang {
    background-color:yellow;
 }
-a:visited {
+a {
   color: inherit;
 }
+
 @media screen and (max-width: 900px) {
    .nav-large {display: none;}
 }
