@@ -11,7 +11,7 @@ def dashboard():
     field_bests = []
     # TODO N+1
     # at least one item are required
-    for field in config.LANGS.values():
+    for cnt, field in enumerate(config.LANGS.values()):
         smallest_submission = db.execute(
                 'SELECT submission.id, length, username'
                 ' FROM submission JOIN user ON user.id = submission.user_id'
@@ -21,7 +21,7 @@ def dashboard():
                 (field["fieldname"],),
                 ).fetchone()
         if smallest_submission is not None:
-            field_bests.append((field['fieldname'], f"{smallest_submission['length']} Bytes", f"user-{smallest_submission['username']}"))
+            field_bests.append((field['fieldname'], f"{smallest_submission['length']} Bytes", f"user-{smallest_submission['username']}", cnt))
         else:
-            field_bests.append((field['fieldname'], "", ""))
+            field_bests.append((field['fieldname'], "", "", cnt))
     return render_template('index.html', field_bests=field_bests)

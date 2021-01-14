@@ -8,7 +8,7 @@
 
    <div class="dashboard">
    {% for best in field_bests %}
-   <a href="{{url_for("submit.submit")}}" class="{{best[2]}}">
+   <a href="/submission/submit/{{best[3]}}")}}" class="{{best[2]}}">
       <div>
          <div>{{best[0]}}</div>
          <div>{{best[1]}}</div>

@@ -17,6 +17,19 @@ client = docker.from_env()
 # without prefix, you can submit noew
 bp = Blueprint('submit', __name__, url_prefix='/submission')
 
+@bp.route('/submit/<int:fieldid>', methods=('GET',))
+@login_required
+def submitwithid(fieldid):
+    # TODO depend on dict's adding id will be saved
+    if fieldid >= 0 and fieldid < len(config.LANGS.keys()):
+        return render_template('submission/submit.html', \
+                fields=config.LANGS.keys(), \
+                currentfield=list(config.LANGS.keys())[fieldid])
+    else:
+        return render_template('submission/submit.html', \
+                fields=config.LANGS.keys())
+
+
 @bp.route('/submit', methods=('GET', 'POST'))
 @login_required
 def submit():
@@ -111,9 +124,8 @@ def submit():
             db.commit()
             return redirect(url_for('index'))
 
-    db = get_db()
-
-    return render_template('submission/submit.html', fields=config.LANGS.keys())
+    return render_template('submission/submit.html',
+            fields=config.LANGS.keys())
 
 @bp.route('/')
 @login_required

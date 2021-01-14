@@ -10,7 +10,11 @@
       <label for="field">Field</label>
       <select name="fieldname" id="fieldname">
          {% for field in fields %}
+         {% if field == currentfield %}
+         <option selected>{{ field }}</option>
+         {% else %}
          <option>{{ field }}</option>
+         {% endif %}
          {%endfor%}
       </select>
       <label for="source">Source Code</label>
