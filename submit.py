@@ -1,5 +1,5 @@
 from flask import (
-        Blueprint, flash, g, redirect, render_template, request, session, url_for
+        Blueprint, flash, g, redirect, render_template, request, session, url_for, config
         )
 from werkzeug.exceptions import abort
 
@@ -22,35 +22,26 @@ bp = Blueprint('submit', __name__, url_prefix='/submission')
 def submit():
     if request.method == 'POST':
         error = None
-        field_id = request.form['field_id']
-        source = request.form['source']
-        bsource = source.encode()
-        length = len(bsource)
+        fieldname = request.form['fieldname']
+        sourcetext = request.form['source']
+        source = sourcetext.encode()
+        length = len(source)
 
-        if not source:
+        if not sourcetext:
             error = "Source code should not be empty."
 
         if length > 10000:
             error = "Source code is too longer."
+        if hasattr(config.LANGS, fieldname) == None:
+            error = f"Your language: {fieldname} is not expected: {config.LANGS[fieldname]}"
 
         # TODO
-        # if field_id
         if error is not None:
             flash(error)
         else:
             db = get_db()
-            langs = db.execute(
-                    'SELECT id, fieldlang'
-                    ' FROM field'
-                    ' WHERE id = ?',
-                    (field_id,)).fetchall()
 
-            if len(langs) == 0:
-                error = "Your language is not expected"
-                flash(error)
-                return render_template('submission/submit.html')
-
-            lang = langs[0]
+            field = config.LANGS[fieldname]
 
             stdout = ""
             stderr = ""
@@ -62,7 +53,7 @@ def submit():
                 # it will be removed authomatically by TemporaryDirectory()
                 (fd, fpath) = tempfile.mkstemp(suffix=".bash", dir=tmpdir)
                 with open(fd, "wb") as fp:
-                    fp.write(bsource)
+                    fp.write(source)
                 fname = os.path.split(fpath)[-1]
 
                 # input
@@ -75,8 +66,8 @@ def submit():
                 volumes = {tmpdir : { 'bind': '/code', 'mode':'ro'}}
 
                 container = client.containers.run(
-                        f"esolang/{lang['fieldlang']}",
-                        ("sh","-c", f"{lang['fieldlang']} /code/{fname} < /code/{inputname}"),
+                        f"esolang/{field['fieldlangs'][0]}",
+                        ("sh","-c", f"{field['fieldlangs'][0]} /code/{fname} < /code/{inputname}"),
                         detach=True,
                         volumes=volumes,
                         mem_limit="128m",
@@ -93,31 +84,36 @@ def submit():
                         )
 
                 #container.wait(timeout=7)
-                time.sleep(7)
-                container.reload()
+                while range(7):
+                    time.sleep(1)
+                    container.reload()
+                    if container.status == "exited":
+                        break
                 if container.status != "exited":
                     container.kill()
-                stdout = container.logs(stdout=True, stderr=False).decode()
-                stderr = container.logs(stdout=False, stderr=True).decode()
+                stdout = container.logs(stdout=True, stderr=False)
+                stderr = container.logs(stdout=False, stderr=True)
             
-            status = "AC" if stdout == "Hello, World!" else "WA"
+            status = "AC" if stdout == b"Hello, World!" else "WA"
+
 
             # TODO that Should be validated:  languages
-            db.execute('INSERT INTO submission'
-                    '(field_id, source, stdout, stderr, status, length, user_id)'
-                    'VALUES (?, ?, ?, ?, ?, ?, ?)',
-                    (lang['id'], source, stdout, stderr, status, length, g.user['id'])
+            submission_id = db.execute('INSERT INTO submission'
+                    '(fieldname, source, status, length, user_id)'
+                    'VALUES (?, ?, ?, ?, ?)',
+                    (fieldname, source, status, length, g.user['id'])
+                    ).lastrowid
+            db.execute('INSERT INTO result'
+                    '(lang, stdin, stdout, stderr, exitcode, user_id, submission_id)'
+                    'VALUES (?,?,?,?,?,?,?)',
+                    (field["fieldlangs"][0],"", stdout, stderr, 0, g.user["id"], submission_id)
                     )
             db.commit()
             return redirect(url_for('index'))
 
     db = get_db()
-    fields = db.execute(
-            'SELECT id, fieldname'
-            ' FROM field'
-            ).fetchall()
 
-    return render_template('submission/submit.html', fields=fields)
+    return render_template('submission/submit.html', fields=config.LANGS.keys())
 
 @bp.route('/')
 @login_required
@@ -125,7 +121,7 @@ def get_submissions():
     db = get_db()
     submissions = db.execute(
             'SELECT s.id, fieldname, length, username, status, created'
-            ' FROM submission s JOIN user u ON s.user_id = u.id JOIN field f ON f.id = s.field_id'
+            ' FROM submission s JOIN user u ON s.user_id = u.id'
             ' ORDER BY created DESC'
             ).fetchall()
     return render_template('submission/index.html', submissions=submissions)
@@ -135,12 +131,18 @@ def get_submissions():
 def get_submission(submitid):
     db = get_db()
     submission = db.execute(
-            'SELECT fieldname, length, username, status, created, source, stdout, stderr'
-            ' FROM submission s JOIN user u ON s.user_id = u.id JOIN field f ON f.id = s.field_id'
+            'SELECT fieldname, length, username, status, created, source'
+            ' FROM submission s JOIN user u ON s.user_id = u.id'
             ' WHERE s.id = ?'
             ,(submitid,)
             ).fetchone()
+    result = db.execute(
+            'SELECT stdin, stdout, stderr'
+            ' FROM result WHERE submission_id = ?'
+            ,(submitid,)
+            ).fetchone()
+
     if submission is None:
         abort(404, f"Submission {submitid} Does not exist.")
 
-    return render_template('submission/submission.html', currentid=submitid, submission=submission)
+    return render_template('submission/submission.html', currentid=submitid, submission=submission, result=result)

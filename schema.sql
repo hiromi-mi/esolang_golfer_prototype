@@ -7,22 +7,26 @@ CREATE TABLE user (
    password TEXT NOT NULL
 );
 
-CREATE TABLE field (
-   id INTEGER PRIMARY KEY AUTOINCREMENT,
-   fieldname TEXT NOT NULL,
-   fieldlang TEXT NOT NULL
-);
-
 CREATE TABLE submission (
    id INTEGER PRIMARY KEY AUTOINCREMENT,
-   field_id INTEGER NOT NULL,
+   fieldname TEXT NOT NULL,
    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-   source TEXT NOT NULL,
-   stdout TEXT NOT NULL,
-   stderr TEXT NOT NULL,
+   source BLOB NOT NULL,
    status TEXT NOT NULL,
    length INTEGER NOT NULL,
    user_id INTEGER NOT NULL,
    FOREIGN KEY (user_id) REFERENCES user (id)
-   FOREIGN KEY (field_id) REFERENCES field (id)
+);
+
+CREATE TABLE result (
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   lang TEXT NOT NULL,
+   stdin BLOB NOT NULL,
+   stdout BLOB NOT NULL,
+   stderr BLOB NOT NULL,
+   exitcode INTEGER NOT NULL,
+   user_id INTEGER NOT NULL,
+   submission_id INTEGER NOT NULL,
+   FOREIGN KEY (user_id) REFERENCES user (id),
+   FOREIGN KEY (submission_id) REFERENCES submission (id)
 );

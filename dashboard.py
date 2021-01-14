@@ -1,5 +1,5 @@
 from flask import (
-        Blueprint, flash, g, redirect, render_template, request, session, url_for
+        Blueprint, flash, g, redirect, render_template, request, session, url_for, config
         )
 from esolang_golfer_prototype.db import get_db
 bp = Blueprint('dashboard', __name__)
@@ -8,21 +8,17 @@ bp = Blueprint('dashboard', __name__)
 def dashboard():
     db = get_db()
     
-    fields = db.execute(
-            'SELECT id, fieldname, fieldlang'
-            ' FROM field').fetchall()
-
     field_bests = []
     # TODO N+1
     # at least one item are required
-    for field in fields:
+    for field in config.LANGS.values():
         smallest_submission = db.execute(
                 'SELECT id, length'
                 ' FROM submission'
-                ' WHERE field_id = ?'
+                ' WHERE fieldname = ?'
                 " and status = 'AC'"
                 ' ORDER BY length ASC',
-                (field['id'],),
+                (field["fieldname"],),
                 ).fetchone()
         if smallest_submission is not None:
             field_bests.append(f"{field['fieldname']} : {smallest_submission['length']} Bytes")

@@ -7,10 +7,10 @@
    </header>
 
    <form method="POST">
-      <label for="field_id">Field</label>
-      <select name="field_id" id="field_id">
+      <label for="field">Field</label>
+      <select name="fieldname" id="fieldname">
          {% for field in fields %}
-         <option value="{{field['id']}}">{{ field['fieldname'] }}</option>
+         <option>{{ field }}</option>
          {%endfor%}
       </select>
       <label for="source">Source Code</label>

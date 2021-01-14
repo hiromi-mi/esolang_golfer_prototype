@@ -12,12 +12,15 @@
       <li>User: {{ submission['username'] }}</li>
       <li>Status: {{ submission['status'] }}</li>
       <li>Created: {{ submission['created'] }}</li>
+      <li>License: CC0-1.0</li>
    </ul>
-   <p>Source License: CC0-1.0</p>
-   <textarea rows="10" readonly name="source">{{submission['source']}}</textarea>
-   <p>Standard Output</p>
-   <textarea rows="10" readonly name="stdout">{{submission['stdout']}}</textarea>
-   <p>Standard Error</p>
-   <textarea rows="10" readonly name="stderr">{{submission['stderr']}}</textarea>
+   <p>Source
+   <textarea rows="10" readonly name="source">{{submission['source']}}</textarea></p>
+   <p>Standard Input
+   <textarea rows="10" readonly name="stdout">{{result['stdin']}}</textarea></p>
+   <p>Standard Output
+   <textarea rows="10" readonly name="stdout">{{result['stdout']}}</textarea></p>
+   <p>Standard Error
+   <textarea rows="10" readonly name="stderr">{{result['stderr']}}</textarea></p>
 </section>
 {% endblock %}
