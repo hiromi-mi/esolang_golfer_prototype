@@ -15,13 +15,13 @@ bp = Blueprint('submit', __name__, url_prefix='/submission')
 @login_required
 def submitwithid(fieldid):
     # TODO depend on dict's adding id will be saved
-    if fieldid >= 0 and fieldid < len(config.LANGS.keys()):
+    if fieldid >= 0 and fieldid < len(config.FIELDS.keys()):
         return render_template('submission/submit.html', \
-                fields=config.LANGS.keys(), \
-                currentfield=list(config.LANGS.keys())[fieldid])
+                fields=config.FIELDS.keys(), \
+                currentfield=list(config.FIELDS.keys())[fieldid])
     else:
         return render_template('submission/submit.html', \
-                fields=config.LANGS.keys())
+                fields=config.FIELDS.keys())
 
 
 @bp.route('/submit', methods=('GET', 'POST'))
@@ -39,8 +39,8 @@ def submit():
 
         if length > 10000:
             error = "Source code is too longer."
-        if hasattr(config.LANGS, fieldname) == None:
-            error = f"Your language: {fieldname} is not expected: {config.LANGS[fieldname]}"
+        if hasattr(config.FIELDS, fieldname) == None:
+            error = f"Your language: {fieldname} is not expected: {config.FIELDS[fieldname]}"
 
         # TODO
         if error is not None:
@@ -50,7 +50,7 @@ def submit():
             return redirect(url_for('index'))
 
     return render_template('submission/submit.html',
-            fields=config.LANGS.keys())
+            fields=config.FIELDS.keys())
 
 @bp.route('/')
 @login_required

@@ -11,7 +11,7 @@ def dashboard():
     field_bests = []
     # TODO N+1
     # at least one item are required
-    for cnt, field in enumerate(config.LANGS.values()):
+    for cnt, field in enumerate(config.FIELDS.values()):
         smallest_submission = db.execute(
                 'SELECT submission.id, length, username'
                 ' FROM submission JOIN user ON user.id = submission.user_id'

@@ -14,7 +14,7 @@ from esolang_golfer_prototype.db import get_db
 def judge(fieldname, sourcetext, source, length):
     db = get_db()
 
-    field = config.LANGS[fieldname]
+    field = config.FIELDS[fieldname]
 
     stdout = ""
     stderr = ""
