@@ -5,6 +5,7 @@ from werkzeug.exceptions import abort
 
 import os.path
 import docker
+from docker.types import LogConfig
 import tempfile
 import time
 
@@ -79,7 +80,9 @@ def submit():
                         detach=True,
                         volumes=volumes,
                         mem_limit="128m",
-                        network_mode="none"
+                        network_mode="none",
+                        # 実際はjsonなので64KBほど
+                        log_config=LogConfig(type=LogConfig.types.JSON, config={'max-size':'1m'})
                         )
 
                 #container.wait(timeout=7)
