@@ -6,3 +6,20 @@ nav ul li { display: block; padding: 0.5rem; }
 form { display: flex; flex-direction: column; margin: 1em 0; }
 form input { margin-bottom: 1em; }
 form label { font-weight: bold; }
+.dashboard { display: grid; grid-template-columns: repeat(3, 1fr);grid-auto-rows: 100px;column-gap: 10px;row-gap: 10px;border: 2px solid blue;border-radius: 5px;}
+.dashboard > a {
+  border: 2px solid blue;
+  border-radius: 5px;
+  padding: 1em;
+  text-align: center;
+  font-weight: bold;
+}
+.user-esolang {
+   background-color:yellow;
+}
+a:visited {
+  color: inherit;
+}
+@media screen and (max-width: 900px) {
+   .nav-large {display: none;}
+}

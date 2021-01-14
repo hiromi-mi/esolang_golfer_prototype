@@ -13,15 +13,15 @@ def dashboard():
     # at least one item are required
     for field in config.LANGS.values():
         smallest_submission = db.execute(
-                'SELECT id, length'
-                ' FROM submission'
+                'SELECT submission.id, length, username'
+                ' FROM submission JOIN user ON user.id = submission.user_id'
                 ' WHERE fieldname = ?'
                 " and status = 'AC'"
                 ' ORDER BY length ASC',
                 (field["fieldname"],),
                 ).fetchone()
         if smallest_submission is not None:
-            field_bests.append(f"{field['fieldname']} : {smallest_submission['length']} Bytes")
+            field_bests.append((field['fieldname'], f"{smallest_submission['length']} Bytes", f"user-{smallest_submission['username']}"))
         else:
-            field_bests.append(field['fieldname'] + ": " + "No Submissions")
+            field_bests.append((field['fieldname'], "", ""))
     return render_template('index.html', field_bests=field_bests)

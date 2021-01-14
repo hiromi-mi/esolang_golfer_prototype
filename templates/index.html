@@ -6,10 +6,15 @@
       <h1>{% block title %}Dashboard{% endblock %}</h1>
    </header>
 
-   <ul>
+   <div class="dashboard">
    {% for best in field_bests %}
-   <li><a href="{{url_for("submit.submit")}}">{{best }}</a></li>
+   <a href="{{url_for("submit.submit")}}" class="{{best[2]}}">
+      <div>
+         <div>{{best[0]}}</div>
+         <div>{{best[1]}}</div>
+      </div>
+   </a>
    {% endfor %}
-   </ul>
+   </div>
 </section>
 {% endblock %}
