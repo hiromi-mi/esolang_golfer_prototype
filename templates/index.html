@@ -8,7 +8,7 @@
 
    <ul>
    {% for best in field_bests %}
-   <li>{{best }}</li>
+   <li><a href="{{url_for("submit.submit")}}">{{best }}</a></li>
    {% endfor %}
    </ul>
 </section>

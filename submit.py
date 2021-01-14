@@ -63,12 +63,18 @@ def submit():
                     fp.write(bsource)
                 fname = os.path.split(fpath)[-1]
 
+                # input
+                (fd, fpath) = tempfile.mkstemp(dir=tmpdir)
+                with open(fd, "wb") as fp:
+                    fp.write(b"Hello")
+                inputname = os.path.split(fpath)[-1]
+
                 #% TODO
                 volumes = {tmpdir : { 'bind': '/code', 'mode':'ro'}}
 
                 container = client.containers.run(
                         f"esolang/{lang['fieldlang']}",
-                        (lang['fieldlang'], f"/code/{fname}"),
+                        ("sh","-c", f"{lang['fieldlang']} /code/{fname} < /code/{inputname}"),
                         detach=True,
                         volumes=volumes
                         )
