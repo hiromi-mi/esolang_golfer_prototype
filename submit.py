@@ -5,7 +5,7 @@ from werkzeug.exceptions import abort
 
 import os.path
 import docker
-from docker.types import LogConfig
+from docker.types import LogConfig, Ulimit
 import tempfile
 import time
 
@@ -81,6 +81,13 @@ def submit():
                         volumes=volumes,
                         mem_limit="128m",
                         network_mode="none",
+                        # ulimit, see /etc/security/limits.conf
+                        # 2MB (log file will be included)
+                        #ulimits=[Ulimit(name='fsize', hard=20000*1000)],
+                        # cpus does not support
+                        cpu_period=100000,
+                        cpu_quota=50000,
+                        pids_limit=20,
                         # 実際はjsonなので64KBほど
                         log_config=LogConfig(type=LogConfig.types.JSON, config={'max-size':'1m'})
                         )
