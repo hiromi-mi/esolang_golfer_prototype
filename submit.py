@@ -6,6 +6,7 @@ from werkzeug.exceptions import abort
 import os.path
 import docker
 import tempfile
+import time
 
 from esolang_golfer_prototype.auth import login_required
 from esolang_golfer_prototype.db import get_db
@@ -79,7 +80,10 @@ def submit():
                         volumes=volumes
                         )
 
-                container.wait(timeout=7)
+                #container.wait(timeout=7)
+                time.sleep(7)
+                if container.status != "exited":
+                    container.kill()
                 stdout = container.logs(stdout=True, stderr=False).decode()
                 stderr = container.logs(stdout=False, stderr=True).decode()
             
