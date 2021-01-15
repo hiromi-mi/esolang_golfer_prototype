@@ -11,9 +11,11 @@ from esolang_golfer_prototype.judge import judge
 # without prefix, you can submit noew
 bp = Blueprint('submit', __name__, url_prefix='/submission')
 
-@bp.route('/submit/<int:fieldid>', methods=('GET',))
+@bp.route('/submit/<int:fieldid>', methods=('GET','POST'))
 @login_required
 def submitwithid(fieldid):
+    if request.method == 'POST':
+        return submit()
     # TODO depend on dict's adding id will be saved
     if fieldid >= 0 and fieldid < len(current_app.config['FIELDS'].keys()):
         return render_template('submission/submit.html', \
@@ -42,7 +44,6 @@ def submit():
         if hasattr(current_app.config['FIELDS'], fieldname) == None:
             error = f"Your language: {fieldname} is not expected: {current_app.config['FIELDS'][fieldname]}"
 
-        # TODO
         if error is not None:
             flash(error)
         else:
