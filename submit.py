@@ -1,5 +1,5 @@
 from flask import (
-        Blueprint, flash, g, redirect, render_template, request, session, url_for, config
+        Blueprint, flash, g, redirect, render_template, request, session, url_for, config, current_app
         )
 from werkzeug.exceptions import abort
 
@@ -15,13 +15,13 @@ bp = Blueprint('submit', __name__, url_prefix='/submission')
 @login_required
 def submitwithid(fieldid):
     # TODO depend on dict's adding id will be saved
-    if fieldid >= 0 and fieldid < len(config.FIELDS.keys()):
+    if fieldid >= 0 and fieldid < len(current_app.config['FIELDS'].keys()):
         return render_template('submission/submit.html', \
-                fields=config.FIELDS.keys(), \
-                currentfield=list(config.FIELDS.keys())[fieldid])
+                fields=current_app.config['FIELDS'].keys(), \
+                currentfield=list(current_app.config['FIELDS'].keys())[fieldid])
     else:
         return render_template('submission/submit.html', \
-                fields=config.FIELDS.keys())
+                fields=current_app.config['FIELDS'].keys())
 
 
 @bp.route('/submit', methods=('GET', 'POST'))
@@ -39,8 +39,8 @@ def submit():
 
         if length > 10000:
             error = "Source code is too longer."
-        if hasattr(config.FIELDS, fieldname) == None:
-            error = f"Your language: {fieldname} is not expected: {config.FIELDS[fieldname]}"
+        if hasattr(current_app.config['FIELDS'], fieldname) == None:
+            error = f"Your language: {fieldname} is not expected: {current_app.config['FIELDS'][fieldname]}"
 
         # TODO
         if error is not None:
@@ -50,7 +50,7 @@ def submit():
             return redirect(url_for('index'))
 
     return render_template('submission/submit.html',
-            fields=config.FIELDS.keys())
+            fields=current_app.config['FIELDS'].keys())
 
 @bp.route('/')
 @login_required

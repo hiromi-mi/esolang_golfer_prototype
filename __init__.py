@@ -9,7 +9,7 @@ def create_app(test_config=None):
             )
 
     if test_config is None:
-        # load instance config
+        # load instance app.config
         app.config.from_pyfile('config.py', silent=False)
     else:
         app.config.from_mapping(test_config)

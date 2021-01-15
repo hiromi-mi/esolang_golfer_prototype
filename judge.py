@@ -1,5 +1,6 @@
 from flask import config
 from flask import g
+from flask import current_app
 
 import os.path
 import docker
@@ -14,7 +15,7 @@ from esolang_golfer_prototype.db import get_db
 def judge(fieldname, sourcetext, source, length):
     db = get_db()
 
-    field = config.FIELDS[fieldname]
+    field = current_app.config['FIELDS'][fieldname]
 
     stdout = ""
     stderr = ""

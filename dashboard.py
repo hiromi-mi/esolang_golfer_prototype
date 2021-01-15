@@ -1,5 +1,5 @@
 from flask import (
-        Blueprint, flash, g, redirect, render_template, request, session, url_for, config
+        Blueprint, flash, g, redirect, render_template, request, session, url_for, config, current_app
         )
 from esolang_golfer_prototype.db import get_db
 bp = Blueprint('dashboard', __name__)
@@ -11,7 +11,7 @@ def dashboard():
     field_bests = []
     # TODO N+1
     # at least one item are required
-    for cnt, field in enumerate(config.FIELDS.values()):
+    for cnt, field in enumerate(current_app.config['FIELDS'].values()):
         smallest_submission = db.execute(
                 'SELECT submission.id, length, username'
                 ' FROM submission JOIN user ON user.id = submission.user_id'
