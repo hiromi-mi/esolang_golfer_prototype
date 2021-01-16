@@ -15,8 +15,34 @@ form label { font-weight: bold; }
   text-align: center;
   font-weight: bold;
 }
-.user-esolang {
+.team-badge {
+   /* 黒丸をつくる */
+   display: inline-block; /* TODO 意味をしらべる */
+   width: 0.8em;
+   height: 0.8em;
+   margin-left: 0.3em;
+   margin-right: 0.3em;
+   border-radius: 1em;
+   vertical-align: middle: /* TODO super ってなに */
+}
+/* TODO ここは . をつけるらしい */
+.team-badge.user-esolang {
    background-color:yellow;
+}
+.user- {
+   /* TODO no user submission */
+   background-color:gray;
+}
+.user-1 {
+   background-color:yellow;
+}
+.user-2 {
+   background-color:red;
+   color: white;
+}
+.user-3 {
+   background-color:blue;
+   color: white;
 }
 a {
   color: inherit;
@@ -28,4 +54,25 @@ a {
 .submissionlog {
    display: flex;
    flex-direction: column;
+}
+.submissions  {
+   width: 100%; /* 端から端まで表示 */
+   border-collapse:collapse;
+   /* border が2種類あるときは1つに統合, 指定しないと double border になる */
+   overflow: auto;
+}
+.submissions th, .submissions td {
+   text-align: center;
+   padding:5px;
+   border: 1px solid blue;
+}
+.submission-status {
+   text-align: center;
+}
+.submission-status-AC {
+   background-color:green;
+   color: white;
+}
+.submission-status-WA {
+   background-color:orange;
 }

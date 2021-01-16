@@ -59,7 +59,7 @@ def get_submissions():
     db = get_db()
     # datetime(created, "localtime") created -> get time as localtime
     submissions = db.execute(
-            'SELECT s.id, fieldname, length, username, status, datetime(created, "localtime") created'
+            'SELECT s.id, fieldname, user_id, length, username, status, datetime(created, "localtime") created'
             ' FROM submission s JOIN user u ON s.user_id = u.id'
             ' ORDER BY created DESC'
             ).fetchall()

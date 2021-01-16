@@ -9,7 +9,7 @@
    <p>{{config['PROBLEM']}}</p>
    <div class="dashboard">
    {% for best in field_bests %}
-   <a href="/submission/submit/{{best[3]}}" class="{{best[2]}}">
+   <a href="/submission/submit/{{best[3]}}" class="user-{{best[4]}}">
       <div>
          <div>{{best[0]}}</div>
          <div>{{best[1]}}</div>
