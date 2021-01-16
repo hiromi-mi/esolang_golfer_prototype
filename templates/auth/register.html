@@ -13,6 +13,7 @@
       <input type="password" autocomplete="new-password" minlength="8" name="password" id="password" required>
       <label for="check">スパム対策としてお手数ですが Befunge-93 「{{befunge}}」の実行結果を入力してください:</label>
       <input name="check" id="check" required>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
       <input type="submit" value="Register">
    </form>
 </section>

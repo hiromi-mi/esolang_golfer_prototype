@@ -20,6 +20,7 @@
       <label for="source">Source Code</label>
       <textarea rows="10" name="source" id="source" required>{{ request.form['source'] }}</textarea>
       <label>Your submission will be licensed under CC0-1.0.</label>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
       <input type="submit" value="Submit!">
    </form>
 </section>

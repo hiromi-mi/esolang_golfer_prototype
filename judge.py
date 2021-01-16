@@ -7,6 +7,7 @@ import docker
 from docker.types import LogConfig, Ulimit
 import tempfile
 import time
+from contextlib import ExitStack
 
 import threading
 import asyncio

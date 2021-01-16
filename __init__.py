@@ -1,5 +1,6 @@
 import os
 from flask import Flask
+from flask_wtf.csrf import CSRFProtect
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -14,11 +15,6 @@ def create_app(test_config=None):
     else:
         app.config.from_mapping(test_config)
 
-    # instance path should
-    @app.route('/hello')
-    def hello():
-        return 'Hello'
-
     from . import db
     db.init_app(app)
 
@@ -29,5 +25,7 @@ def create_app(test_config=None):
     app.register_blueprint(submit.bp)
     app.register_blueprint(dashboard.bp)
     app.add_url_rule('/', endpoint='index')
+
+    csrf = CSRFProtect(app)
 
     return app
