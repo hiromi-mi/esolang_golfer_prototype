@@ -13,7 +13,7 @@
    <tr><td><a href="/submission/{{submission['id']}}">{{ submission['id'] }}</a></td>
       <td> {{ submission['fieldname'] }} </td>
       <td> {{ submission['length'] }} </td>
-      <td><span class="user-{{submission['user_id']}} team-badge"></span> {{ submission['username'] }}</td>
+      <td><span class="user-{{submission['user_id'] % 6}} team-badge"></span> {{ submission['username'] }}</td>
       <td> <span class="submission-status submission-status-{{ submission['status'] }}"> {{ submission['status'] }}</span></td>
       <td> {{ submission['created'] }}</td>
    </tr>

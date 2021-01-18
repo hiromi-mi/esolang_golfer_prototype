@@ -33,6 +33,9 @@ form label { font-weight: bold; }
    /* TODO no user submission */
    background-color:gray;
 }
+.user-0 {
+   background-color:green;
+}
 .user-1 {
    background-color:yellow;
 }
@@ -42,6 +45,14 @@ form label { font-weight: bold; }
 }
 .user-3 {
    background-color:blue;
+   color: white;
+}
+.user-4 {
+   background-color:purple;
+   color: white;
+}
+.user-5 {
+   background-color:orange;
    color: white;
 }
 a {
@@ -75,4 +86,7 @@ a {
 }
 .submission-status-WA {
    background-color:orange;
+}
+.submission-status-Waiting {
+   background-color:gray;
 }

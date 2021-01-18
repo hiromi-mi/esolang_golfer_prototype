@@ -1,12 +1,23 @@
 import os
 from flask import Flask
 from flask_wtf.csrf import CSRFProtect
+from flask_talisman import Talisman
 
 def create_app(test_config=None):
+    csp = {
+            'default-src': '\'self\'',
+            'script-src': '\'self\'',
+    }
+
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
             SECRET_KEY='dev',
             DATABASE=os.path.join(app.instance_path, 'esolang.sqlite'),
+            )
+    Talisman(
+            app,
+            content_security_policy=csp,
+            content_security_policy_nonce_in=['style-src']
             )
 
     if test_config is None:

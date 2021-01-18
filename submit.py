@@ -70,7 +70,7 @@ def get_submissions():
 def get_submission(submitid):
     db = get_db()
     submission = db.execute(
-            'SELECT fieldname, length, username, status, datetime(created, "localtime") created, source'
+            'SELECT fieldname, length, username, status, datetime(created, "localtime") created, source, s.user_id'
             ' FROM submission s JOIN user u ON s.user_id = u.id'
             ' WHERE s.id = ?'
             ,(submitid,)

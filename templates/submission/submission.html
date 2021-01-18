@@ -9,8 +9,8 @@
    <ul>
       <li>Field: {{ submission['fieldname'] }}</li>
       <li>Length: {{ submission['length'] }} Bytes</li>
-      <li>User: {{ submission['username'] }}</li>
-      <li>Status: {{ submission['status'] }}</li>
+      <li>User: <span class="user-{{submission['user_id'] % 6}} team-badge"></span> {{ submission['username'] }}</li>
+      <li>Status: <span class="submission-status submission-status-{{ submission['status'] }}"> {{ submission['status'] }}</li>
       <li>Created: {{ submission['created'] }}</li>
       <li>License: CC0-1.0</li>
    </ul>
