@@ -75,13 +75,17 @@ def get_submission(submitid):
             ' WHERE s.id = ?'
             ,(submitid,)
             ).fetchone()
-    result = db.execute(
-            'SELECT stdin, stdout, stderr'
+    results = db.execute(
+            'SELECT lang, stdin, stdout, stderr'
             ' FROM result WHERE submission_id = ?'
             ,(submitid,)
-            ).fetchone()
+            ).fetchall()
 
     if submission is None:
         abort(404, f"Submission {submitid} Does not exist.")
 
-    return render_template('submission/submission.html', currentid=submitid, submission=submission, result=result)
+    return render_template(
+            'submission/submission.html',
+            currentid=submitid,
+            submission=submission,
+            results=enumerate(results))

@@ -14,16 +14,20 @@
       <li>Created: {{ submission['created'] }}</li>
       <li>License: CC0-1.0</li>
    </ul>
-   <h2>Result #1</h2>
+   {% if g.user["id"] == submission["user_id"] %}
    <h3>Source</h3>
    <div class="submissionlog">
    <textarea rows="10" readonly name="source">{{submission['source']}}</textarea>
+   {% for result_cnt, result in results %}
+   <h2>Result #{{result_cnt}} ({{result['lang']}})</h2>
 <h3>Standard Input</h3>
-   <textarea rows="10" readonly name="stdout">{{result['stdin']}}</textarea>
+   <textarea rows="3" readonly name="stdin">{{result['stdin']}}</textarea>
    <h3>Standard Output</h3>
-   <textarea rows="10" readonly name="stdout">{{result['stdout']}}</textarea>
+   <textarea rows="3" readonly name="stdout">{{result['stdout']}}</textarea>
    <h3>Standard Error</h3>
-   <textarea rows="10" readonly name="stderr">{{result['stderr']}}</textarea>
+   <textarea rows="3" readonly name="stderr">{{result['stderr']}}</textarea>
+   {% endfor %}
    </div>
+   {% endif %}
 </section>
 {% endblock %}
