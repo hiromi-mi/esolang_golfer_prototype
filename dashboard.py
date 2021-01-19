@@ -1,7 +1,7 @@
 from flask import (
         Blueprint, flash, g, redirect, render_template, request, session, url_for, config, current_app
         )
-from esolang_golfer_prototype.db import get_db
+from db import get_db
 bp = Blueprint('dashboard', __name__)
 
 @bp.route('/')

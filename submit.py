@@ -3,9 +3,9 @@ from flask import (
         )
 from werkzeug.exceptions import abort
 
-from esolang_golfer_prototype.auth import login_required
-from esolang_golfer_prototype.db import get_db
-from esolang_golfer_prototype.judge import judge
+from auth import login_required
+from db import get_db
+from judge import judge
 
 
 # without prefix, you can submit noew
@@ -47,8 +47,8 @@ def submit():
         if error is not None:
             flash(error)
         else:
-            judge(fieldname, sourcetext, source, length)
-            return redirect(url_for('index'))
+            submission_id = judge(fieldname, sourcetext, source, length)
+            return redirect(f'/submission/{submission_id}')
 
     return render_template('submission/submit.html',
             fields=current_app.config['FIELDS'].keys())

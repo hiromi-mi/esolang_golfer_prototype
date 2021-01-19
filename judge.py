@@ -1,23 +1,23 @@
 from flask import config
 from flask import g
-from flask import current_app
+from flask import current_app, app
 
 import os.path
 import docker
 from docker.types import LogConfig, Ulimit
 import tempfile
 import time
-from contextlib import ExitStack
-from concurrent.futures import ProcessPoolExecutor
+import base64
 
 import threading
 import asyncio
 
+from db import get_db
+from app import celery
+
 client = docker.from_env()
 
-from esolang_golfer_prototype.db import get_db
-
-def judge_init(tmpdir, source, field, db, submission_id):
+def judge_init(tmpdir, source, field, db, submission_id, user_id):
     (fd, fpath) = tempfile.mkstemp(suffix=".bash", dir=tmpdir)
     with open(fd, "wb") as fp:
         fp.write(source)
@@ -73,7 +73,7 @@ def judge_init(tmpdir, source, field, db, submission_id):
         db.execute('INSERT INTO result'
                 '(lang, stdin, stdout, stderr, exitcode, user_id, submission_id)'
                 'VALUES (?,?,?,?,?,?,?)',
-                (lang, testcase[0], stdout, stderr, 0, g.user["id"], submission_id)
+                (lang, testcase[0], stdout, stderr, 0, user_id, submission_id)
                 )
         if stdout != testcase[1]:
             status_bool = False
@@ -96,9 +96,21 @@ def judge(fieldname, sourcetext, source, length):
             'VALUES (?, ?, ?, ?, ?)',
             (fieldname, source, status, length, g.user['id'])
             ).lastrowid
+    db.commit()
+    b64_source = base64.b64encode(source).decode("ascii")
+    judge_async.delay(b64_source, field, submission_id, g.user["id"])
+    return submission_id
+
+# user_id は async においては分からないので持ち込む必要あり
+@celery.task()
+def judge_async(b64_source, field, submission_id, user_id):
+    # due to passing bytes sequence into celery.task is not avaliable
+    source = base64.b64decode(b64_source, validate=True)
+    status = "Waiting"
+    db = get_db()
 
     with tempfile.TemporaryDirectory(dir=os.environ["HOME"]) as tmpdir:
-        status = "AC" if judge_init(tmpdir, source, field, db, submission_id) else "WA"
+        status = "AC" if judge_init(tmpdir, source, field, db, submission_id, user_id) else "WA"
 
     # status = "AC" if stdout == b"Hello, World!" else "WA"
     db.execute('UPDATE submission'
