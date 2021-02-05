@@ -21,7 +21,10 @@ def init_celery(app=None):
 
 def create_app(test_config=None):
     csp = {
-            'default-src': '\'self\'',
+            'default-src': [
+                '\'self\'',
+                '\'cdn.muicss.com\'',
+                ],
             'script-src': '\'self\'',
     }
 
